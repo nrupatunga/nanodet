@@ -52,6 +52,7 @@ def test_get_matrix():
 
 
 def test_warp():
+    __import__('pdb').set_trace()
     dummy_meta = dict(
         img=np.random.randint(0, 255, size=(100, 200, 3), dtype=np.uint8),
         gt_bboxes=np.array([[0, 0, 20, 20]]),

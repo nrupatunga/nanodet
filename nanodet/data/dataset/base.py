@@ -19,6 +19,7 @@ import numpy as np
 from torch.utils.data import Dataset
 
 from ..transform import Pipeline
+from ..transform import MosaicAugmentation
 
 
 class BaseDataset(Dataset, metaclass=ABCMeta):
@@ -72,6 +73,11 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
         self.mode = mode
 
         self.data_info = self.get_data_info(ann_path)
+        if load_mosaic:
+            self.mosaic = MosaicAugmentation(img_path,
+                                             self.data_info,
+                                             self.coco_api,
+                                             input_dim=(320, 160))
 
     def __len__(self):
         return len(self.data_info)
@@ -81,11 +87,15 @@ class BaseDataset(Dataset, metaclass=ABCMeta):
             return self.get_val_data(idx)
         else:
             while True:
-                data = self.get_train_data(idx)
-                if data is None:
-                    idx = self.get_another_id()
-                    continue
-                return data
+                p = random.uniform(0, 1)
+                if p > 0.7 and self.load_mosaic:
+                    data = self.mosaic[idx]
+                else:
+                    data = self.get_train_data(idx)
+                    if data is None:
+                        idx = self.get_another_id()
+                        continue
+                    return data
 
     @staticmethod
     def get_random_size(

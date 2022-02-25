@@ -39,16 +39,18 @@ def overlay_bbox_cv(img, dets, class_names, score_thresh):
         txt_color = (0, 0, 0) if np.mean(_COLORS[label]) > 0.5 else (255, 255, 255)
         font = cv2.FONT_HERSHEY_SIMPLEX
         txt_size = cv2.getTextSize(text, font, 0.5, 2)[0]
-        cv2.rectangle(img, (x0, y0), (x1, y1), color, 2)
+        # cv2.rectangle(img, (x0, y0), (x1, y1), color, 2)
+        cv2.circle(img, (int((x0 + x1) / 2), int((y0 + y1) / 2)), 4,
+                   color, -1)
 
-        cv2.rectangle(
-            img,
-            (x0, y0 - txt_size[1] - 1),
-            (x0 + txt_size[0] + txt_size[1], y0 - 1),
-            color,
-            -1,
-        )
-        cv2.putText(img, text, (x0, y0 - 1), font, 0.5, txt_color, thickness=1)
+        # cv2.rectangle(
+            # img,
+            # (x0, y0 - txt_size[1] - 1),
+            # (x0 + txt_size[0] + txt_size[1], y0 - 1),
+            # color,
+            # -1,
+        # )
+        # cv2.putText(img, text, (x0, y0 - 1), font, 0.5, txt_color, thickness=1)
     return img
 
 
